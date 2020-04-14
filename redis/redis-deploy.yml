@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-deployment
+  labels:
+    app: prometheus
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+      - name: redis
+        image: redis:rc-alpine
+        ports:
+          - containerPort: 6379
+        resources:
+          requests:
+            cpu: 100m
+            memory: 60Mi
+          limits:
+            cpu: 200m
+            memory: 100Mi
+      - name: redis-exporter
+        image: oliver006/redis_exporter:v1.5.2-alpine
+        ports:
+          - containerPort: 9121
+        resources:
+          requests:
+            cpu: 100m
+            memory: 60Mi
+          limits:
+            cpu: 200m
+            memory: 100Mi
